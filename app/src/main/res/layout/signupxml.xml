@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <EditText
+        android:id="@+id/xmlEmail"
+        android:layout_width="342dp"
+        android:layout_height="52dp"
+        android:layout_marginTop="100dp"
+        android:ems="10"
+        android:hint="Enter your Email Here"
+        android:inputType="textEmailAddress"
+        android:textAlignment="center"
+        android:textAllCaps="false"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/xmlPassword"
+        android:layout_width="342dp"
+        android:layout_height="52dp"
+        android:layout_marginTop="50dp"
+        android:ems="10"
+        android:hint="Enter your Password Here"
+        android:inputType="textPassword"
+        android:textAlignment="center"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/xmlUsername" />
+
+    <EditText
+        android:id="@+id/xmlUsername"
+        android:layout_width="342dp"
+        android:layout_height="52dp"
+        android:layout_marginTop="50dp"
+        android:ems="10"
+        android:hint="Enter Your Username Here"
+        android:inputType="textPersonName"
+        android:textAlignment="center"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/xmlEmail" />
+
+    <Button
+        android:id="@+id/xmlCancel"
+        android:layout_width="277dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="30dp"
+        android:text="Cancel"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/xmlSignUP" />
+
+    <Button
+        android:id="@+id/xmlSignUP"
+        android:layout_width="277dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="75dp"
+        android:text="Sign Up"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/xmlPassword" />
+
+    <TextView
+        android:id="@+id/FadingTextxml"
+        android:layout_width="342dp"
+        android:layout_height="35dp"
+        android:layout_marginTop="40dp"
+        android:text="That Email Already Exists"
+        android:textAlignment="center"
+        android:textColor="#B60C0C"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/xmlPassword" />
+</androidx.constraintlayout.widget.ConstraintLayout>
