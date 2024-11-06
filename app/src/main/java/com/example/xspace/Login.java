@@ -1,4 +1,5 @@
 package com.example.xspace;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.animation.Animation;
@@ -10,8 +11,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
-
-
+import java.util.zip.Inflater;
 
 
 public class Login extends AppCompatActivity {
@@ -115,5 +115,30 @@ public class Login extends AppCompatActivity {
         });
 
         dialog.show();
+    }
+
+    private void LoginButton(){
+        Button Login = findViewById(R.id.LoginB);
+        View LoginInflate = getLayoutInflater().inflate(R.layout.loginview, null);
+
+        Login.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                EditText Username = LoginInflate.findViewById(R.id.Username);
+                EditText Password = LoginInflate.findViewById(R.id.Password);
+
+
+                String UsernameS = Username.getText().toString();
+                String PasswordS = Password.getText().toString();
+
+
+                if(LDB.validateUser(UsernameS, PasswordS)) {
+
+                    Intent intent = new Intent(Login.this, HomePage.class);
+                    startActivity(intent);
+                }
+
+            }
+        });
     }
 }
