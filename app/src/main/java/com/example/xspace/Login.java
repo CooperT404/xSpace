@@ -18,6 +18,7 @@ public class Login extends AppCompatActivity {
 
     LoginDB LDB;
     private Button SignUp;
+    private Button Login;
     private TextView fadingmessage;
 
     protected void onDestroy(){
@@ -32,6 +33,15 @@ public class Login extends AppCompatActivity {
 
         LDB = new LoginDB(this);
         SignUp = findViewById(R.id.NewUser);
+        Login = findViewById(R.id.LoginB);
+
+        Login.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(Login.this, HomePage.class);
+                startActivity(intent);
+            }
+        });
 
         SignUp.setOnClickListener(new View.OnClickListener() {
             @Override
