@@ -45,7 +45,8 @@ android {
 }
 
 dependencies {
-
+    implementation 'org.mongodb:mongodb-driver-sync:4.4.0'
+    implementation 'io.realm:realm-gradle-plugin:10.10.1'
     implementation 'com.google.android.material:material:1.9.0'
     implementation "com.android.support:multidex:1.0.3"
     implementation 'androidx.appcompat:appcompat:1.7.0'
@@ -55,4 +56,5 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.2.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.6.1'
     coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.0.3'
+
 }
