@@ -1,51 +1,50 @@
 package com.example.xspace;
 
-import com.mongodb.client.MongoClient;
-import com.mongodb.client.MongoClients;
-import com.mongodb.client.MongoCollection;
-import com.mongodb.client.MongoDatabase;
-import org.bson.Document;
-import org.bson.conversions.Bson;
-import com.mongodb.client.model.Filters;
+import android.content.Context;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 
-public class LoginDB {
+import androidx.annotation.NonNull;
 
-    private static final String DATABASE_NAME = "UserDatabase";
-    private static final String COLLECTION_NAME = "UserCollection";
+public class LoginDB  {
 
-    private MongoClient mongoClient;
-    private MongoDatabase database;
-    private MongoCollection<Document> collection;
+    private static final String COLLECTION_NAME = "users";
 
-    public LoginDB(Login login) {
-        mongoClient = MongoClients.create("mongodb+srv://<username>:<password>@cluster0.mongodb.net/?retryWrites=true&w=majority");
-        database = mongoClient.getDatabase(DATABASE_NAME);
-        collection = database.getCollection(COLLECTION_NAME);
+    private FirebaseFirestore db;
+    private CollectionReference usersCollection;
+
+
+
+    public LoginDB(Context context) {
+        db = FirebaseFirestore.getInstance();
+        usersCollection = db.collection(COLLECTION_NAME);
     }
 
-    public boolean insertData(String username, String password, String email) {
-        Document document = new Document("USERNAME", username)
-                .append("PASSWORD", password)
-                .append("EMAIL", email);
-        collection.insertOne(document);
-        return true; // insertion is successful if no exception is thrown
+    public void insertData(String username, String password, String email, final OnCompleteListener<DocumentReference> listener) {
+        User user = new User(username, password, email);
+        usersCollection.add(user).addOnCompleteListener(listener);
     }
 
-    public boolean checkEmailExists(String email) {
-        Bson filter = Filters.eq("EMAIL", email);
-        long count = collection.countDocuments(filter);
-        return count > 0;
+
+    public void checkEmailExists(String email, final OnCompleteListener<QuerySnapshot> listener) {
+        usersCollection.whereEqualTo("email", email)
+                .get()
+                .addOnCompleteListener(listener);
     }
 
-    public boolean validateUser(String username, String password) {
-        Bson filter = Filters.and(Filters.eq("USERNAME", username), Filters.eq("PASSWORD", password));
-        long count = collection.countDocuments(filter);
-        return count > 0;
+
+    public void validateUser(String username, String password, final OnCompleteListener<QuerySnapshot> listener) {
+        usersCollection.whereEqualTo("username", username)
+                .whereEqualTo("password", password)
+                .get()
+                .addOnCompleteListener(listener);
     }
 
-    public void close() {
-        mongoClient.close();
-    }
 }
 
 

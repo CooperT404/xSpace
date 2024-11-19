@@ -20,7 +20,17 @@
             </intent-filter>
         </activity>
         <activity android:name=".HomePage"
-            android:theme="@style/AppTheme"></activity>
+            android:theme="@style/AppTheme"/>
+        <activity android:name=".mapTracker"
+            android:theme="@style/AppTheme"/>
+        <activity android:name=".Inventory"
+            android:theme="@style/AppTheme"/>
+        <activity android:name=".Orders"
+            android:theme="@style/AppTheme"/>
+        <activity android:name=".Store"
+            android:theme="@style/AppTheme"/>
+        <activity android:name=".Profile"
+            android:theme="@style/AppTheme"/>
 
     </application>
 

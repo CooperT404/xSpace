@@ -1,4 +1,5 @@
 package com.example.xspace;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 
@@ -38,12 +39,30 @@ public class HomePage extends AppCompatActivity {
                 // Handle navigation view item clicks here.
                 switch (menuItem.getItemId()) {
                     case R.id.nav_home:
-                        // Handle the home action
+                        Intent homeIntent = new Intent(HomePage.this, HomePage.class);
+                        startActivity(homeIntent);
                         break;
                     case R.id.nav_profile:
-                        // Handle the profile action
+                        Intent profileIntent = new Intent(HomePage.this, Profile.class);
+                        startActivity(profileIntent);
                         break;
-                    // Add more cases for other menu items
+                    case R.id.nav_inventory:
+                        Intent invIntent = new Intent(HomePage.this, Inventory.class);
+                        startActivity(invIntent);
+                        break;
+
+                    case R.id.nav_Orders:
+                        Intent ordIntent = new Intent(HomePage.this, Orders.class);
+                        startActivity(ordIntent);
+                        break;
+                    case R.id.nav_Map:
+                        Intent mapIntent = new Intent(HomePage.this, mapTracker.class);
+                        startActivity(mapIntent);
+                        break;
+                    case R.id.nav_Store:
+                        Intent storeIntent = new Intent(HomePage.this, Store.class);
+                        startActivity(storeIntent);
+                        break;
                 }
                 drawerLayout.closeDrawer(GravityCompat.START);
                 return true;

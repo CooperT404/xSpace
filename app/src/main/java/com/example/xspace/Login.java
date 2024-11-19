@@ -1,15 +1,25 @@
 package com.example.xspace;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.zip.Inflater;
 
@@ -21,17 +31,18 @@ public class Login extends AppCompatActivity {
     private Button Login;
     private TextView fadingmessage;
 
-    protected void onDestroy(){
-        super.onDestroy();
-        LDB.close();
-    }
+
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.loginview);
 
+        FirebaseApp.initializeApp(this);
         LDB = new LoginDB(this);
+
+
         SignUp = findViewById(R.id.NewUser);
         Login = findViewById(R.id.LoginB);
 
@@ -80,42 +91,66 @@ public class Login extends AppCompatActivity {
                 String PasswordS = Password.getText().toString();
                 String EmailS = Email.getText().toString();
 
-                if (!LDB.checkEmailExists(EmailS)) {
-                    LDB.insertData(UsernameS, PasswordS, EmailS);
-                    dialog.dismiss();
-                } else {
-                    // Send fading message that the email is already in use
-                    fadingmessage.setVisibility(View.VISIBLE);
-                    fadingmessage.startAnimation(fadein);
+                LDB.checkEmailExists(EmailS, new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            QuerySnapshot querySnapshot = task.getResult();
+                            if (querySnapshot.isEmpty()) {
+                                // Email does not exist, proceed to insert data
+                                LDB.insertData(UsernameS, PasswordS, EmailS, new OnCompleteListener<DocumentReference>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<DocumentReference> task) {
+                                        if (task.isSuccessful()) {
+                                            dialog.dismiss();
+                                        } else {
+                                            // Handle the error
+                                            Log.e("SignUpError", "Error inserting data", task.getException());
+                                            Toast.makeText(Login.this, "Error inserting data", Toast.LENGTH_SHORT).show();
+                                        }
+                                    }
+                                });
+                            } else {
+                                // Send fading message that the email is already in use
+                                fadingmessage.setVisibility(View.VISIBLE);
+                                fadingmessage.startAnimation(fadein);
 
-                    fadein.setAnimationListener(new Animation.AnimationListener() {
-                        @Override
-                        public void onAnimationStart(Animation animation) {}
+                                fadein.setAnimationListener(new Animation.AnimationListener() {
+                                    @Override
+                                    public void onAnimationStart(Animation animation) {}
 
-                        @Override
-                        public void onAnimationEnd(Animation animation) {
-                            fadingmessage.startAnimation(fadeout);
+                                    @Override
+                                    public void onAnimationEnd(Animation animation) {
+                                        fadingmessage.startAnimation(fadeout);
+                                    }
+
+                                    @Override
+                                    public void onAnimationRepeat(Animation animation) {}
+                                });
+
+                                fadeout.setAnimationListener(new Animation.AnimationListener() {
+                                    @Override
+                                    public void onAnimationStart(Animation animation) {}
+
+                                    @Override
+                                    public void onAnimationEnd(Animation animation) {
+                                        fadingmessage.setVisibility(View.GONE);
+                                    }
+
+                                    @Override
+                                    public void onAnimationRepeat(Animation animation) {}
+                                });
+                            }
+                        } else {
+                            // Handle the error
+                            Log.e("SignUpError", "Error checking email existence", task.getException());
+                            Toast.makeText(Login.this, "Error checking email existence", Toast.LENGTH_SHORT).show();
                         }
-
-                        @Override
-                        public void onAnimationRepeat(Animation animation) {}
-                    });
-
-                    fadeout.setAnimationListener(new Animation.AnimationListener() {
-                        @Override
-                        public void onAnimationStart(Animation animation) {}
-
-                        @Override
-                        public void onAnimationEnd(Animation animation) {
-                            fadingmessage.setVisibility(View.GONE);
-                        }
-
-                        @Override
-                        public void onAnimationRepeat(Animation animation) {}
-                    });
-                }
+                    }
+                });
             }
         });
+
 
         negativeButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -127,6 +162,7 @@ public class Login extends AppCompatActivity {
         dialog.show();
     }
 
+
     private void LoginButton(){
         Button Login = findViewById(R.id.LoginB);
         View LoginInflate = getLayoutInflater().inflate(R.layout.loginview, null);
@@ -137,18 +173,33 @@ public class Login extends AppCompatActivity {
                 EditText Username = LoginInflate.findViewById(R.id.Username);
                 EditText Password = LoginInflate.findViewById(R.id.Password);
 
-
                 String UsernameS = Username.getText().toString();
                 String PasswordS = Password.getText().toString();
 
-
-                if(LDB.validateUser(UsernameS, PasswordS)) {
-
-                    Intent intent = new Intent(Login.this, HomePage.class);
-                    startActivity(intent);
-                }
-
+                LDB.validateUser(UsernameS, PasswordS, new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            QuerySnapshot querySnapshot = task.getResult();
+                            if (!querySnapshot.isEmpty()) {
+                                // User found, proceed to HomePage
+                                Intent intent = new Intent(Login.this, HomePage.class);
+                                startActivity(intent);
+                            } else {
+                                // User not found, show error message
+                                // You can use a Toast or update a TextView
+                                Toast.makeText(Login.this, "Invalid username or password", Toast.LENGTH_SHORT).show();
+                            }
+                        } else {
+                            // Handle the error
+                            Log.e("LoginError", "Error validating user", task.getException());
+                            Toast.makeText(Login.this, "Error validating user", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
             }
         });
     }
+
+
 }

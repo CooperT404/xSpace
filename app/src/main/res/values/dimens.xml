@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+        <!-- Custom size for the ActionBar -->
+        <dimen name="custom_action_bar_size">70dp</dimen>
+
+
+
+</resources>

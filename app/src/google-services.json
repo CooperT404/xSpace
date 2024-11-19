@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "993376202321",
+    "project_id": "space-x-app-20702",
+    "storage_bucket": "space-x-app-20702.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:993376202321:android:83773e8afa145b20465270",
+        "android_client_info": {
+          "package_name": "com.PennState.SpaceX"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDDC0UEUbqqNz5DTDM7ZsY6NVndJGKumAQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:993376202321:android:25d95b01c3e36a07465270",
+        "android_client_info": {
+          "package_name": "com.example.xspace"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDDC0UEUbqqNz5DTDM7ZsY6NVndJGKumAQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
