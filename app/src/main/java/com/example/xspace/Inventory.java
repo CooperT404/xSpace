@@ -102,7 +102,7 @@ public class Inventory extends AppCompatActivity {
         });
     }
     private void fetchAndCreateButtons(boolean isIn) {
-        Warehouse.fetchAllDocuments(db, new Warehouse.WarehouseFetchListener() {
+        Warehouse.fetchAllDocuments(db, true ,new Warehouse.WarehouseFetchListener() {
             @Override
             public void onFetchSuccess(List<String> documentIDs) {
                 createButtons(documentIDs);
@@ -117,19 +117,35 @@ public class Inventory extends AppCompatActivity {
 
     private void createButtons(List<String> documentIDs) {
         LinearLayout buttonContainer = findViewById(R.id.buttonContainer); // Ensure this is the correct ID
+        buttonContainer.removeAllViews(); // Clear existing buttons
+
         for (String id : documentIDs) {
-            Button button = new Button(this);
-            button.setText("ID: " + id);
-            button.setTag(id); // Set the tag to the document ID
-            button.setOnClickListener(v -> showDocumentDetails(id));
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                    ViewGroup.LayoutParams.MATCH_PARENT,
-                    ViewGroup.LayoutParams.WRAP_CONTENT);
-            params.setMargins(0, 10, 0, 10);
-            button.setLayoutParams(params);
-            buttonContainer.addView(button);
+            // Fetch the document from Firestore
+            FirebaseFirestore db = FirebaseFirestore.getInstance();
+            db.collection("Warehouse").document(id).get().addOnCompleteListener(task -> {
+                if (task.isSuccessful() && task.getResult() != null) {
+                    DocumentSnapshot document = task.getResult();
+                    String name = document.getString("name");
+
+                    // Create the button with the fetched name
+                    Button button = new Button(this);
+                    button.setText(name + " - Units: " + document.getLong("units")); // Use the name and units from the document
+                    button.setTag(id); // Set the tag to the document ID
+                    button.setOnClickListener(v -> showDocumentDetails(id));
+                    LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                            ViewGroup.LayoutParams.MATCH_PARENT,
+                            ViewGroup.LayoutParams.WRAP_CONTENT);
+                    params.setMargins(0, 10, 0, 10);
+                    button.setLayoutParams(params);
+                    buttonContainer.addView(button);
+                } else {
+                    // Handle the error
+                    Toast.makeText(this, "Failed to fetch document: " + id, Toast.LENGTH_SHORT).show();
+                }
+            });
         }
     }
+
 
     private void showDocumentDetails(String documentID) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -156,6 +172,22 @@ public class Inventory extends AppCompatActivity {
             }
         });
     }
+    private void addNewButton(Warehouse warehouse) {
+        // Create a new button for the newly added item
+        Button newButton = new Button(this);
+        newButton.setText(warehouse.getName() + " - " + warehouse.getUnits() + " units");
+
+        // Set any additional properties or listeners for the button here
+        newButton.setOnClickListener(v -> {
+            // Handle button click
+            showDocumentDetails(warehouse.getWareID());
+        });
+
+        // Add the button to your layout or container
+        LinearLayout buttonContainer = findViewById(R.id.buttonContainer); // Make sure to use the correct ID
+        buttonContainer.addView(newButton);
+    }
+
 
 
 
@@ -181,10 +213,12 @@ public class Inventory extends AppCompatActivity {
         priceInput.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
         layout.addView(priceInput);
 
-        // Use CheckBox for Out/In boolean input
         final CheckBox outInInput = new CheckBox(this);
         outInInput.setText("In (checked) / Out (unchecked)");
+        // Set the CheckBox to unchecked by default
+        outInInput.setChecked(false);
         layout.addView(outInInput);
+
 
         final EditText wareIDInput = new EditText(this);
         wareIDInput.setHint("Ware ID");
@@ -205,9 +239,8 @@ public class Inventory extends AppCompatActivity {
                 @Override
                 public void onInsertSuccess(String documentId) {
                     Toast.makeText(Inventory.this, "Item added successfully with ID: " + documentId, Toast.LENGTH_SHORT).show();
-                    fetchAndCreateButtons(true); // Refresh buttons after adding a new item, fetching "In" documents
+                    addNewButton(warehouse); // Add the new item button directly
                 }
-
                 @Override
                 public void onInsertFailure(Exception e) {
                     Toast.makeText(Inventory.this, "Failed to add item: " + e.getMessage(), Toast.LENGTH_SHORT).show();
@@ -219,6 +252,7 @@ public class Inventory extends AppCompatActivity {
 
         builder.show();
     }
+
 
 
 

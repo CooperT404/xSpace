@@ -14,13 +14,20 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
+            <ImageView
+                android:id="@+id/background_image"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"
+                android:src="@drawable/planet"
+                android:layout_gravity="center"/>
 
             <!-- Add Toolbar -->
             <androidx.appcompat.widget.Toolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
-                android:background="@color/colorPrimary"
+                android:background="@drawable/bubble_background"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <!-- Content Frame -->

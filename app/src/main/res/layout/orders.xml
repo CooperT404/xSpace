@@ -14,14 +14,22 @@
         <!-- Main content -->
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:background="@drawable/planet">
+            <ImageView
+                android:id="@+id/background_image"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"
+                android:src="@drawable/planet"
+                android:layout_gravity="center"/>
 
             <!-- Add Toolbar -->
             <androidx.appcompat.widget.Toolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
-                android:background="@color/colorPrimary"
+                android:background="@drawable/bubble_background"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <!-- Content Frame -->
@@ -40,8 +48,8 @@
             <!-- ScrollView and Buttons -->
             <ScrollView
                 android:id="@+id/scrollView2"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
+                android:layout_width="401dp"
+                android:layout_height="510dp"
                 android:layout_margin="8dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -58,8 +66,9 @@
                         android:id="@+id/textView2"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Top"
+                        android:text="Orders"
                         android:textAlignment="center"
+                        android:textColor="@color/white"
                         android:textSize="24sp" />
                 </LinearLayout>
             </ScrollView>
@@ -70,6 +79,7 @@
                 android:layout_height="48dp"
                 android:layout_marginTop="16dp"
                 android:text="Add Item"
+                android:background="@drawable/bubble_background"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

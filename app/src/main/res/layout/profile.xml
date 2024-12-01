@@ -1,9 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    >
+    <ImageView
+        android:id="@+id/background_image"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:src="@drawable/planet"
+        android:layout_gravity="center"/>
+
+    <TextView
+        android:id="@+id/Username_Profile"
+        android:layout_width="324dp"
+        android:layout_height="53dp"
+        android:layout_marginTop="100dp"
+        android:background="@drawable/bubble_background"
+        android:text="TextView"
+        android:textAlignment="center"
+        android:textColor="@color/black"
+        android:textSize="24sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.drawerlayout.widget.DrawerLayout
         android:id="@+id/drawer_layout"
@@ -14,13 +36,6 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
-            <ImageView
-                android:id="@+id/background_image"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:scaleType="centerCrop"
-                android:src="@drawable/planet"
-                android:layout_gravity="center"/>
 
             <!-- Add Toolbar -->
             <androidx.appcompat.widget.Toolbar

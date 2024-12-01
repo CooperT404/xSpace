@@ -65,14 +65,17 @@ public class Warehouse {
     }
 
     // Method to fetch all documents with the same WareID and filter by Out/In status
-    public static void fetchAllDocuments(FirebaseFirestore db, WarehouseFetchListener listener) {
+    public static void fetchAllDocuments(FirebaseFirestore db, boolean isIn, WarehouseFetchListener listener) {
         db.collection("Warehouse")
                 .get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         List<String> documentIDs = new ArrayList<>();
                         for (QueryDocumentSnapshot document : task.getResult()) {
-                            documentIDs.add(document.getId());
+                            Boolean documentIsIn = document.getBoolean("in");
+                            if (documentIsIn != null && documentIsIn == isIn) {
+                                documentIDs.add(document.getId());
+                            }
                         }
                         listener.onFetchSuccess(documentIDs);
                     } else {
@@ -80,6 +83,7 @@ public class Warehouse {
                     }
                 });
     }
+
 
 
 
