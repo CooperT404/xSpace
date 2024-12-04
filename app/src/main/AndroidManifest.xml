@@ -31,6 +31,8 @@
             android:theme="@style/AppTheme"/>
         <activity android:name=".Profile"
             android:theme="@style/AppTheme"/>
+        <activity android:name=".DocumentPageActivity"
+            android:theme="@style/AppTheme"/>
 
     </application>
 

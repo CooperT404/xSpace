@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     >
+
     <ImageView
         android:id="@+id/background_image"
         android:layout_width="match_parent"
@@ -12,20 +13,6 @@
         android:scaleType="centerCrop"
         android:src="@drawable/planet"
         android:layout_gravity="center"/>
-
-    <TextView
-        android:id="@+id/Username_Profile"
-        android:layout_width="324dp"
-        android:layout_height="53dp"
-        android:layout_marginTop="100dp"
-        android:background="@drawable/bubble_background"
-        android:text="TextView"
-        android:textAlignment="center"
-        android:textColor="@color/black"
-        android:textSize="24sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.drawerlayout.widget.DrawerLayout
         android:id="@+id/drawer_layout"
@@ -38,6 +25,18 @@
             android:layout_height="match_parent">
 
             <!-- Add Toolbar -->
+            <Button
+                android:id="@+id/Save"
+                android:layout_width="204dp"
+                android:layout_height="59dp"
+                android:layout_marginBottom="50dp"
+                android:background="@drawable/bubble_background"
+                android:text="Save"
+                android:textSize="24sp"
+                app:layout_constraintBottom_toBottomOf="@+id/content_frame"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+
             <androidx.appcompat.widget.Toolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
@@ -53,7 +52,149 @@
                 app:layout_constraintTop_toBottomOf="@id/toolbar"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent" />
+                app:layout_constraintRight_toRightOf="parent" >
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:layout_width="203dp"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical"
+                        android:paddingBottom="8dp">
+
+                        <TextView
+                            android:id="@+id/Name"
+                            android:layout_width="match_parent"
+                            android:layout_height="56dp"
+                            android:text="Name:"
+                            android:textAlignment="center"
+                            android:textColor="@color/colorWhite"
+                            android:textSize="34sp" />
+
+                        <TextView
+                            android:id="@+id/Company"
+                            android:layout_width="match_parent"
+                            android:layout_height="56dp"
+                            android:text="Company: "
+                            android:textAlignment="center"
+                            android:textColor="@color/colorWhite"
+                            android:textSize="34sp" />
+
+                        <TextView
+                            android:id="@+id/Role"
+                            android:layout_width="match_parent"
+                            android:layout_height="56dp"
+                            android:text="Role:"
+                            android:textAlignment="center"
+                            android:textColor="@color/colorWhite"
+                            android:textSize="34sp" />
+
+                        <TextView
+                            android:id="@+id/Email"
+                            android:layout_width="match_parent"
+                            android:layout_height="56dp"
+                            android:text="Email: "
+                            android:textAlignment="center"
+                            android:textColor="@color/colorWhite"
+                            android:textSize="34sp" />
+
+                        <TextView
+                            android:id="@+id/Phone"
+                            android:layout_width="match_parent"
+                            android:layout_height="56dp"
+                            android:text="Phone: "
+                            android:textAlignment="center"
+                            android:textColor="@color/colorWhite"
+                            android:textSize="34sp" />
+
+                        <TextView
+                            android:id="@+id/Location"
+                            android:layout_width="match_parent"
+                            android:layout_height="56dp"
+                            android:text="Location: "
+                            android:textAlignment="center"
+                            android:textColor="@color/colorWhite"
+                            android:textSize="34sp" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
+
+                        <EditText
+                            android:id="@+id/Name_Edit"
+                            android:layout_width="match_parent"
+                            android:layout_height="56dp"
+                            android:ems="10"
+                            android:hint="John Doe"
+                            android:inputType="text"
+                            android:textAlignment="center"
+                            android:textColor="@android:color/holo_green_light"
+                            android:textColorHint="@android:color/holo_red_dark" />
+
+                        <EditText
+                            android:id="@+id/Com_Edit"
+                            android:layout_width="match_parent"
+                            android:layout_height="56dp"
+                            android:ems="10"
+                            android:hint="New Corp"
+                            android:inputType="text"
+                            android:textAlignment="center"
+                            android:textColor="@android:color/holo_green_light"
+                            android:textColorHint="@android:color/holo_red_dark" />
+
+                        <EditText
+                            android:id="@+id/Role_Edit"
+                            android:layout_width="match_parent"
+                            android:layout_height="56dp"
+                            android:ems="10"
+                            android:hint="Product Manager"
+                            android:inputType="text"
+                            android:textAlignment="center"
+                            android:textColor="@android:color/holo_green_light"
+                            android:textColorHint="@android:color/holo_red_dark" />
+
+                        <EditText
+                            android:id="@+id/Email_Edit"
+                            android:layout_width="match_parent"
+                            android:layout_height="56dp"
+                            android:ems="10"
+                            android:hint="Doe1234@gmail.com"
+                            android:inputType="text"
+                            android:textAlignment="center"
+                            android:textColor="@android:color/holo_green_light"
+                            android:textColorHint="@android:color/holo_red_dark" />
+
+                        <EditText
+                            android:id="@+id/Phone_Edit"
+                            android:layout_width="match_parent"
+                            android:layout_height="56dp"
+                            android:ems="10"
+                            android:hint="(000)-000-0000"
+                            android:inputType="phone"
+                            android:textAlignment="center"
+                            android:textColor="@color/colorWhite"
+                            android:textColorHint="@android:color/holo_red_dark" />
+
+                        <EditText
+                            android:id="@+id/Location_Edit"
+                            android:layout_width="match_parent"
+                            android:layout_height="56dp"
+                            android:ems="10"
+                            android:hint="123 new drive"
+                            android:inputType="text"
+                            android:textAlignment="center"
+                            android:textColor="@android:color/holo_green_light"
+                            android:textColorHint="@android:color/holo_red_dark" />
+
+                    </LinearLayout>
+                </LinearLayout>
+            </FrameLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

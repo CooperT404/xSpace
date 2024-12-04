@@ -18,6 +18,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseApp;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.QuerySnapshot;
 
@@ -98,10 +100,15 @@ public class Login extends AppCompatActivity {
                             QuerySnapshot querySnapshot = task.getResult();
                             if (querySnapshot.isEmpty()) {
                                 // Email does not exist, proceed to insert data
-                                LDB.insertData(UsernameS, PasswordS, EmailS, new OnCompleteListener<DocumentReference>() {
+                                LDB.insertData(UsernameS, PasswordS, EmailS, new OnCompleteListener<Void>() {
                                     @Override
-                                    public void onComplete(@NonNull Task<DocumentReference> task) {
+                                    public void onComplete(@NonNull Task<Void> task) {
                                         if (task.isSuccessful()) {
+                                            // Add or update email in Profile database
+                                            ProfileFirebase profile = new ProfileFirebase();
+                                            profile.setEmail(EmailS);
+                                            profile.addOrUpdateProfile(profile);
+
                                             dialog.dismiss();
                                         } else {
                                             // Handle the error
@@ -151,7 +158,6 @@ public class Login extends AppCompatActivity {
             }
         });
 
-
         negativeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -161,6 +167,8 @@ public class Login extends AppCompatActivity {
 
         dialog.show();
     }
+
+
 
 
     private void LoginButton(){
@@ -176,30 +184,43 @@ public class Login extends AppCompatActivity {
                 String UsernameS = Username.getText().toString();
                 String PasswordS = Password.getText().toString();
 
-                LDB.validateUser(UsernameS, PasswordS, new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            QuerySnapshot querySnapshot = task.getResult();
-                            if (!querySnapshot.isEmpty()) {
-                                // User found, proceed to HomePage
-                                Intent intent = new Intent(Login.this, HomePage.class);
-                                startActivity(intent);
+                // Get the current user's email from FirebaseAuth
+                FirebaseAuth auth = FirebaseAuth.getInstance();
+                FirebaseUser user = auth.getCurrentUser();
+
+                if (user != null) {
+                    String email = user.getEmail();
+
+                    LDB.validateUser(UsernameS, PasswordS, new OnCompleteListener<QuerySnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                            if (task.isSuccessful()) {
+                                QuerySnapshot querySnapshot = task.getResult();
+                                if (!querySnapshot.isEmpty()) {
+                                    // User found, proceed to HomePage
+                                    Intent intent = new Intent(Login.this, HomePage.class);
+                                    // Pass email to HomePage
+                                    intent.putExtra("userEmail", email);
+                                    startActivity(intent);
+                                } else {
+                                    // User not found, show error message
+                                    // You can use a Toast or update a TextView
+                                    Toast.makeText(Login.this, "Invalid username or password", Toast.LENGTH_SHORT).show();
+                                }
                             } else {
-                                // User not found, show error message
-                                // You can use a Toast or update a TextView
-                                Toast.makeText(Login.this, "Invalid username or password", Toast.LENGTH_SHORT).show();
+                                // Handle the error
+                                Log.e("LoginError", "Error validating user", task.getException());
+                                Toast.makeText(Login.this, "Error validating user", Toast.LENGTH_SHORT).show();
                             }
-                        } else {
-                            // Handle the error
-                            Log.e("LoginError", "Error validating user", task.getException());
-                            Toast.makeText(Login.this, "Error validating user", Toast.LENGTH_SHORT).show();
                         }
-                    }
-                });
+                    });
+                } else {
+                    Toast.makeText(Login.this, "No user is signed in", Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }
+
 
 
 }
