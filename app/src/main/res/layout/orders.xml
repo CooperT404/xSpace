@@ -48,8 +48,8 @@
             <!-- ScrollView and Buttons -->
             <ScrollView
                 android:id="@+id/scrollView2"
-                android:layout_width="401dp"
-                android:layout_height="510dp"
+                android:layout_width="399dp"
+                android:layout_height="490dp"
                 android:layout_margin="8dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"

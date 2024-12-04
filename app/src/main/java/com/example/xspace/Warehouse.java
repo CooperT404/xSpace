@@ -84,17 +84,37 @@ public class Warehouse {
                 });
     }
 
+    // Method to fetch unique warehouse IDs
+    public static void fetchUniqueWareIDs(FirebaseFirestore db, UniqueWareIDFetchListener listener) {
+        db.collection("Warehouse")
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        List<String> uniqueWareIDs = new ArrayList<>();
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            String wareID = document.getString("wareID");
+                            if (wareID != null && !uniqueWareIDs.contains(wareID)) {
+                                uniqueWareIDs.add(wareID);
+                            }
+                        }
+                        listener.onFetchSuccess(uniqueWareIDs);
+                    } else {
+                        listener.onFetchFailure(task.getException());
+                    }
+                });
+    }
 
-
-
-
+    // Listener interface for unique warehouse ID fetch results
+    public interface UniqueWareIDFetchListener {
+        void onFetchSuccess(List<String> uniqueWareIDs);
+        void onFetchFailure(Exception e);
+    }
 
     // Listener interface for fetch results
     public interface WarehouseFetchListener {
         void onFetchSuccess(List<String> warehouseIDs);
         void onFetchFailure(Exception e);
     }
-
 
     // Determine if item is In (1) or Out (0)
     public boolean isIn() {
@@ -115,4 +135,5 @@ public class Warehouse {
         void onInsertFailure(Exception e);
     }
 }
+
 

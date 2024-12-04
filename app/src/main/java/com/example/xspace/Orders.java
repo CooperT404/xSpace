@@ -129,6 +129,7 @@ public class Orders extends AppCompatActivity {
 
                     // Create the button with the fetched name
                     Button button = new Button(this);
+                    button.setBackgroundResource(R.drawable.bubble_background);
                     button.setText(name + " - Units: " + document.getLong("units")); // Use the name and units from the document
                     button.setTag(id); // Set the tag to the document ID
                     button.setOnClickListener(v -> showDocumentDetails(id));
