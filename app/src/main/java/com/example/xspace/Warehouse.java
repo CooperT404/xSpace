@@ -16,12 +16,13 @@ public class Warehouse {
     // Constructors, getters, and setters
     public Warehouse() {}
 
-    public Warehouse(String name, int units, double pricePerUnit, int outIn, String wareID) {
+    public Warehouse(String name, int units, double pricePerUnit, int outIn, String wareID, String userID) {
         this.name = name;
         this.units = units;
         this.pricePerUnit = pricePerUnit;
         this.outIn = outIn;
         this.wareID = wareID;
+        this.wareID = userID;
     }
 
     public String getName() {
@@ -85,24 +86,26 @@ public class Warehouse {
     }
 
     // Method to fetch unique warehouse IDs
-    public static void fetchUniqueWareIDs(FirebaseFirestore db, UniqueWareIDFetchListener listener) {
+    public static void fetchWareIDsByUserId(FirebaseFirestore db, String userId, UniqueWareIDFetchListener listener) {
         db.collection("Warehouse")
+                .whereEqualTo("userID", userId)
                 .get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
-                        List<String> uniqueWareIDs = new ArrayList<>();
+                        List<String> wareIDs = new ArrayList<>();
                         for (QueryDocumentSnapshot document : task.getResult()) {
                             String wareID = document.getString("wareID");
-                            if (wareID != null && !uniqueWareIDs.contains(wareID)) {
-                                uniqueWareIDs.add(wareID);
+                            if (wareID != null && !wareIDs.contains(wareID)) {
+                                wareIDs.add(wareID);
                             }
                         }
-                        listener.onFetchSuccess(uniqueWareIDs);
+                        listener.onFetchSuccess(wareIDs);
                     } else {
                         listener.onFetchFailure(task.getException());
                     }
                 });
     }
+
 
     // Listener interface for unique warehouse ID fetch results
     public interface UniqueWareIDFetchListener {

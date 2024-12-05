@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputType;
+import android.util.Log;
 import android.view.MenuItem;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -12,6 +13,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationView;
 
 import android.view.View;
@@ -25,6 +29,10 @@ import android.widget.Toast;
 
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -41,8 +49,31 @@ public class Inventory extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.inventory);
 
+
+
+
         buttonContainer = findViewById(R.id.buttonContainer);
-        db = FirebaseFirestore.getInstance();
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        String email = getIntent().getStringExtra("EXTRA_EMAIL");
+
+        db.collection("users")
+                .whereEqualTo("email", email)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                String userId = document.getId();
+                                Log.d("UserID", "User ID: " + userId);
+                                // Pass userId to fetchAndCreateButtons method
+                                fetchAndCreateButtons(true, userId);
+                            }
+                        } else {
+                            Log.d("FirestoreError", "Error getting documents: ", task.getException());
+                        }
+                    }
+                });
 
 
 
@@ -50,7 +81,7 @@ public class Inventory extends AppCompatActivity {
         addButton.setOnClickListener(v -> showAddItemDialog());
 
 
-        fetchAndCreateButtons(true);
+
 
 
 
@@ -101,11 +132,17 @@ public class Inventory extends AppCompatActivity {
             }
         });
     }
-    private void fetchAndCreateButtons(boolean isIn) {
-        Warehouse.fetchAllDocuments(db, true ,new Warehouse.WarehouseFetchListener() {
+    private void fetchAndCreateButtons(boolean isIn, String userId) {
+        Warehouse.fetchAllDocuments(db, true, new Warehouse.WarehouseFetchListener() {
             @Override
             public void onFetchSuccess(List<String> documentIDs) {
-                createButtons(documentIDs);
+                List<String> filteredDocumentIDs = new ArrayList<>();
+                for (String documentID : documentIDs) {
+                    if (documentID.equals(userId)) {
+                        filteredDocumentIDs.add(documentID);
+                    }
+                }
+                createButtons(filteredDocumentIDs);
             }
 
             @Override
@@ -114,6 +151,7 @@ public class Inventory extends AppCompatActivity {
             }
         });
     }
+
 
     private void createButtons(List<String> documentIDs) {
         LinearLayout buttonContainer = findViewById(R.id.buttonContainer); // Ensure this is the correct ID
@@ -235,7 +273,7 @@ public class Inventory extends AppCompatActivity {
             int outIn = isIn ? 1 : 0; // Convert boolean to int (1 for In, 0 for Out)
             String wareID = wareIDInput.getText().toString();
 
-            Warehouse warehouse = new Warehouse(name, units, pricePerUnit, outIn, wareID);
+            Warehouse warehouse = new Warehouse(name, units, pricePerUnit, outIn, wareID, "WWW");
             Warehouse.insertWarehouse(warehouse, db, new Warehouse.WarehouseInsertListener() {
                 @Override
                 public void onInsertSuccess(String documentId) {

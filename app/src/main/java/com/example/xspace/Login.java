@@ -21,6 +21,7 @@ import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.zip.Inflater;
@@ -29,6 +30,7 @@ import java.util.zip.Inflater;
 public class Login extends AppCompatActivity {
 
     LoginDB LDB;
+    Warehouse WH;
     private Button SignUp;
     private Button Login;
     private TextView fadingmessage;
@@ -45,14 +47,17 @@ public class Login extends AppCompatActivity {
         LDB = new LoginDB(this);
 
 
+
+
         SignUp = findViewById(R.id.NewUser);
         Login = findViewById(R.id.LoginB);
 
         Login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(Login.this, HomePage.class);
-                startActivity(intent);
+
+                LoginButton();
+
             }
         });
 
@@ -108,6 +113,7 @@ public class Login extends AppCompatActivity {
                                             ProfileFirebase profile = new ProfileFirebase();
                                             profile.setEmail(EmailS);
                                             profile.addOrUpdateProfile(profile);
+
 
                                             dialog.dismiss();
                                         } else {
@@ -169,53 +175,55 @@ public class Login extends AppCompatActivity {
     }
 
 
-
-
-    private void LoginButton(){
+    private void LoginButton() {
         Button Login = findViewById(R.id.LoginB);
-        View LoginInflate = getLayoutInflater().inflate(R.layout.loginview, null);
+        LoginDB LDB = new LoginDB(this);
 
         Login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                EditText Username = LoginInflate.findViewById(R.id.Username);
-                EditText Password = LoginInflate.findViewById(R.id.Password);
+                // Access EditText fields directly from the activity's view hierarchy
+                EditText Username = findViewById(R.id.Username);
+                EditText Password = findViewById(R.id.Password);
 
                 String UsernameS = Username.getText().toString();
                 String PasswordS = Password.getText().toString();
 
-                // Get the current user's email from FirebaseAuth
-                FirebaseAuth auth = FirebaseAuth.getInstance();
-                FirebaseUser user = auth.getCurrentUser();
+                Log.d("LoginDebug", "Username: " + UsernameS);
+                Log.d("LoginDebug", "Password: " + PasswordS);
 
-                if (user != null) {
-                    String email = user.getEmail();
-
+                if (UsernameS != null && !UsernameS.isEmpty() && PasswordS != null && !PasswordS.isEmpty()) {
                     LDB.validateUser(UsernameS, PasswordS, new OnCompleteListener<QuerySnapshot>() {
                         @Override
                         public void onComplete(@NonNull Task<QuerySnapshot> task) {
                             if (task.isSuccessful()) {
                                 QuerySnapshot querySnapshot = task.getResult();
                                 if (!querySnapshot.isEmpty()) {
-                                    // User found, proceed to HomePage
-                                    Intent intent = new Intent(Login.this, HomePage.class);
-                                    // Pass email to HomePage
-                                    intent.putExtra("userEmail", email);
-                                    startActivity(intent);
+                                    // User is validated, get the email and start HomePage activity
+                                    for (QueryDocumentSnapshot document : querySnapshot) {
+                                        String email = document.getString("email");
+                                        Intent intent = new Intent(Login.this, HomePage.class);
+                                        intent.putExtra("EXTRA_EMAIL", email);
+                                        Log.d("Login", "Starting HomePage Activity with email: " + email);
+                                        startActivity(intent);
+                                    }
                                 } else {
                                     // User not found, show error message
-                                    // You can use a Toast or update a TextView
                                     Toast.makeText(Login.this, "Invalid username or password", Toast.LENGTH_SHORT).show();
                                 }
                             } else {
                                 // Handle the error
-                                Log.e("LoginError", "Error validating user", task.getException());
-                                Toast.makeText(Login.this, "Error validating user", Toast.LENGTH_SHORT).show();
+                                Log.e("LoginError", "Error", task.getException());
+                                if (task.getException() != null) {
+                                    Log.e("LoginErrorDetails", "Exception: " + task.getException().getMessage());
+                                }
+                                Toast.makeText(Login.this, "Error  user", Toast.LENGTH_SHORT).show();
                             }
                         }
+
                     });
                 } else {
-                    Toast.makeText(Login.this, "No user is signed in", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(Login.this, "Username or Password cannot be empty", Toast.LENGTH_SHORT).show();
                 }
             }
         });

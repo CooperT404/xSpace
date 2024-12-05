@@ -220,7 +220,7 @@ public class Orders extends AppCompatActivity {
             int outIn = isIn ? 1 : 0; // Convert boolean to int (1 for In, 0 for Out)
             String wareID = wareIDInput.getText().toString();
 
-            Warehouse warehouse = new Warehouse(name, units, pricePerUnit, outIn, wareID);
+            Warehouse warehouse = new Warehouse(name, units, pricePerUnit, outIn, wareID, "WWW");
             Warehouse.insertWarehouse(warehouse, db, new Warehouse.WarehouseInsertListener() {
                 @Override
                 public void onInsertSuccess(String documentId) {
