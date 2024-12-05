@@ -45,39 +45,44 @@ public class DocumentPageActivity extends AppCompatActivity {
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
 
-        navView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-                // Handle navigation view item clicks here.
-                switch (menuItem.getItemId()) {
-                    case R.id.nav_home:
-                        Intent homeIntent = new Intent(DocumentPageActivity.this, HomePage.class);
-                        startActivity(homeIntent);
-                        break;
-                    case R.id.nav_profile:
-                        Intent profileIntent = new Intent(DocumentPageActivity.this, Profile.class);
-                        startActivity(profileIntent);
-                        break;
-                    case R.id.nav_inventory:
-                        Intent invIntent = new Intent(DocumentPageActivity.this, Inventory.class);
-                        startActivity(invIntent);
-                        break;
-                    case R.id.nav_Orders:
-                        Intent ordIntent = new Intent(DocumentPageActivity.this, Orders.class);
-                        startActivity(ordIntent);
-                        break;
-                    case R.id.nav_Map:
-                        Intent mapIntent = new Intent(DocumentPageActivity.this, mapTracker.class);
-                        startActivity(mapIntent);
-                        break;
-                    case R.id.nav_Store:
-                        Intent storeIntent = new Intent(DocumentPageActivity.this, Store.class);
-                        startActivity(storeIntent);
-                        break;
-                }
-                drawerLayout.closeDrawer(GravityCompat.START);
-                return true;
+        String userEmail = getIntent().getStringExtra("EXTRA_EMAIL");
+
+        navView.setNavigationItemSelectedListener(menuItem -> {
+            switch (menuItem.getItemId()) {
+                case R.id.nav_home:
+                    Intent homeIntent = new Intent(DocumentPageActivity.this, HomePage.class);
+                    Log.d("Login", "Starting HomePage Activity with email: " + userEmail);
+                    homeIntent.putExtra("EXTRA_EMAIL", userEmail);
+                    startActivity(homeIntent);
+                    break;
+                case R.id.nav_profile:
+                    Intent profileIntent = new Intent(DocumentPageActivity.this, Profile.class);
+                    profileIntent.putExtra("EXTRA_EMAIL", userEmail);
+                    startActivity(profileIntent);
+                    break;
+                case R.id.nav_inventory:
+                    Intent invIntent = new Intent(DocumentPageActivity.this, Inventory.class);
+                    invIntent.putExtra("EXTRA_EMAIL", userEmail);
+                    startActivity(invIntent);
+                    break;
+                case R.id.nav_Orders:
+                    Intent ordIntent = new Intent(DocumentPageActivity.this, Orders.class);
+                    ordIntent.putExtra("EXTRA_EMAIL", userEmail);
+                    startActivity(ordIntent);
+                    break;
+                case R.id.nav_Map:
+                    Intent mapIntent = new Intent(DocumentPageActivity.this, mapTracker.class);
+                    mapIntent.putExtra("EXTRA_EMAIL", userEmail);
+                    startActivity(mapIntent);
+                    break;
+                case R.id.nav_Store:
+                    Intent storeIntent = new Intent(DocumentPageActivity.this, Store.class);
+                    storeIntent.putExtra("EXTRA_EMAIL", userEmail);
+                    startActivity(storeIntent);
+                    break;
             }
+            drawerLayout.closeDrawer(GravityCompat.START);
+            return true;
         });
 
         String wareID = getIntent().getStringExtra("WARE_ID");

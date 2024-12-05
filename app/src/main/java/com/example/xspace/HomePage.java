@@ -60,6 +60,7 @@ public class HomePage extends AppCompatActivity {
                 case R.id.nav_home:
                     Intent homeIntent = new Intent(HomePage.this, HomePage.class);
                     homeIntent.putExtra("EXTRA_EMAIL", userEmail);
+                    Log.d("Login", "Starting HomePage Activity with email: " + userEmail);
                     startActivity(homeIntent);
                     break;
                 case R.id.nav_profile:
@@ -140,7 +141,9 @@ public class HomePage extends AppCompatActivity {
 
     private void openDocumentPage(String wareID) {
         Intent intent = new Intent(this, DocumentPageActivity.class);
+        String userEmail = getIntent().getStringExtra("EXTRA_EMAIL");
         intent.putExtra("WARE_ID", wareID);
+        intent.putExtra("EXTRA_EMAIL", userEmail);
         startActivity(intent);
     }
 }

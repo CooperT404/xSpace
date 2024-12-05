@@ -42,32 +42,43 @@ public class Profile extends AppCompatActivity {
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
 
-        navView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-                switch (menuItem.getItemId()) {
-                    case R.id.nav_home:
-                        startActivity(new Intent(Profile.this, HomePage.class));
-                        break;
-                    case R.id.nav_profile:
-                        startActivity(new Intent(Profile.this, Profile.class));
-                        break;
-                    case R.id.nav_inventory:
-                        startActivity(new Intent(Profile.this, Inventory.class));
-                        break;
-                    case R.id.nav_Orders:
-                        startActivity(new Intent(Profile.this, Orders.class));
-                        break;
-                    case R.id.nav_Map:
-                        startActivity(new Intent(Profile.this, mapTracker.class));
-                        break;
-                    case R.id.nav_Store:
-                        startActivity(new Intent(Profile.this, Store.class));
-                        break;
-                }
-                drawerLayout.closeDrawer(GravityCompat.START);
-                return true;
+        String userEmail = getIntent().getStringExtra("EXTRA_EMAIL");
+
+        navView.setNavigationItemSelectedListener(menuItem -> {
+            switch (menuItem.getItemId()) {
+                case R.id.nav_home:
+                    Intent homeIntent = new Intent(Profile.this, HomePage.class);
+                    homeIntent.putExtra("EXTRA_EMAIL", userEmail);
+                    startActivity(homeIntent);
+                    break;
+                case R.id.nav_profile:
+                    Intent profileIntent = new Intent(Profile.this, Profile.class);
+                    profileIntent.putExtra("EXTRA_EMAIL", userEmail);
+                    startActivity(profileIntent);
+                    break;
+                case R.id.nav_inventory:
+                    Intent invIntent = new Intent(Profile.this, Inventory.class);
+                    invIntent.putExtra("EXTRA_EMAIL", userEmail);
+                    startActivity(invIntent);
+                    break;
+                case R.id.nav_Orders:
+                    Intent ordIntent = new Intent(Profile.this, Orders.class);
+                    ordIntent.putExtra("EXTRA_EMAIL", userEmail);
+                    startActivity(ordIntent);
+                    break;
+                case R.id.nav_Map:
+                    Intent mapIntent = new Intent(Profile.this, mapTracker.class);
+                    mapIntent.putExtra("EXTRA_EMAIL", userEmail);
+                    startActivity(mapIntent);
+                    break;
+                case R.id.nav_Store:
+                    Intent storeIntent = new Intent(Profile.this, Store.class);
+                    storeIntent.putExtra("EXTRA_EMAIL", userEmail);
+                    startActivity(storeIntent);
+                    break;
             }
+            drawerLayout.closeDrawer(GravityCompat.START);
+            return true;
         });
 
         // Initialize EditTexts and Button
